@@ -13,7 +13,7 @@ knitr::opts_chunk$set(warning = FALSE)
 
 ## Executive summary
 
-The goal of this analysis is to fit a statistical learning model to predict the way in which an exercise is done, using data from accelerometers on the bell, forearm, arm and dumbell of 6 participants. Several types of models have been tested like linear discriminant analysis, boosting machine and random forests, and the final model have been tuned and selected using 5-fold cross-validation. A random forest model have been selected with an out-of-sample accuracy ratio of 0.9932. 
+The goal of this analysis is to fit a statistical learning model to predict the way in which an exercise is done, using data from accelerometers on the bell, forearm, arm and dumbell of 6 participants. Several types of models have been tested like linear discriminant analysis, boosting machine and random forests, and the final model have been tuned and selected using 5-fold cross-validation. The final model is a random forest model and we estimate out-of-sample error using 5-fold cross-validation obtaining an acccuracy ratio of 0.991. 
 
 ## Downloading and treatment of data
 
@@ -67,9 +67,15 @@ dim(training_r)
 
 So, we are going to model the "classe" outcome (variable 53) with the other 52 variables.
 
-## Model selection and tuning
+## Model building process
 
-We fit a "linear discriminant analysis" model to the data. We change the control options of the caret package train function in order to allow for parallel computing and make the computation faster. We use 5-fold cross-validation in order to estimate out-of-sample error using the training data.
+The process to build a machine learning algorithm is to choose the model that has a lowest out-of-sample error or equivalently highest accuracy ratio. The accuracy ratio has been estimated using 5-fold cross-validation and has also been compared with the accuracy ratio computed in the testing sample.
+
+We have dropped the variables with a majority of NA and 0 values, so we model the outcome depending on the rest of variables (52 variables).
+
+We have fitted different models using 3 learning algorithms appropriate for classification (qualitative outcome), namely "linear discriminant analysis", "boosting machine" and "random forest".
+
+First, We fit a "linear discriminant analysis" model to the data. We change the control options of the caret package train function in order to allow for parallel computing and make the computation faster. We use 5-fold cross-validation in order to estimate out-of-sample error using the training data.
 
 ```{r, cache=TRUE}
 set.seed(123)
@@ -190,7 +196,7 @@ CM_rf_cv5_test<-confusionMatrix(predict(mod_rf_cv5,testing),as.factor(testing$cl
 
 ## Conclusions
 
-In the previous section we have seen that from all the trained models the one with a highest out-of-sample accuracy ratio is a random forest fitted with 5-fold cross-validation. The accuracy ratio on the testing sample is 0.9932.
+In the previous section we have seen that from all the trained models the one with a highest out-of-sample accuracy ratio is a random forest fitted with 5-fold cross-validation. The out-of-sample accuracy ratio using 5-fold cross-validation is 0.991.
 
 We can plot the importance of each variable in this "best" model (saved in R object mod_rf_cv5).
 
